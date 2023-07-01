@@ -266,7 +266,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_hcfmy")
 }],
-"loop": true,
+"loop": false,
 "name": &"back_skill_first",
 "speed": 5.0
 }, {
@@ -280,7 +280,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j6ily")
 }],
-"loop": true,
+"loop": false,
 "name": &"back_skill_second",
 "speed": 5.0
 }, {
@@ -479,7 +479,7 @@ script = ExtResource("1_5m8nl")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ac65x")
-animation = &"side_skill_second"
+animation = &"back_skill_first"
 offset = Vector2(0, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

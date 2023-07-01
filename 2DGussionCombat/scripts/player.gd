@@ -20,11 +20,8 @@ func get_prefix_direction(direction):
 	return "side"
 
 func play_animation_skills(direction_type: String):
-	if !($FirstSkill/Cd.is_stopped() && $SecondSkill/Cd.is_stopped()):
-		return
-		
-	var is_lmb: bool = Input.is_action_pressed("ui_lmb")
-	var is_rmb: bool = Input.is_action_pressed("ui_rmb")
+	var is_lmb: bool = Input.is_action_pressed("ui_lmb") && $FirstSkill/Cd.is_stopped() 
+	var is_rmb: bool = Input.is_action_pressed("ui_rmb") && $SecondSkill/Cd.is_stopped()
 	
 	if is_lmb || is_rmb:
 		if is_lmb:
@@ -62,8 +59,8 @@ func play_animation(direction: Vector2):
 	$AnimatedSprite2D.play(direction_type + "_" + animation_type)
 	
 func player_movement(_delta): 
-	var direction = Vector2.ZERO	 
-	
+	var direction = Vector2.ZERO
+		
 	direction.x = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	direction.y = int(Input.is_action_pressed("ui_down"))  - int(Input.is_action_pressed("ui_up"))
 	
@@ -87,5 +84,5 @@ func _on_cd_timeout():
 func _on_skill_animation_finished():
 	$AnimatedSprite2D.disconnect("animation_finished", _on_skill_animation_finished)
 	$AnimatedSprite2D.play(current_direction + "_idle")
-	is_skill_animation_playing = false		
+	is_skill_animation_playing = false
 		
