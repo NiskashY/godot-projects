@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cyxipq7l7xn3a"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="HSlider" type="HSlider" parent="."]
+offset_left = 412.0
+offset_top = 39.0
+offset_right = 648.0
+offset_bottom = 62.0
+
+[node name="VSlider" type="VSlider" parent="."]
+offset_left = 216.0
+offset_top = 49.0
+offset_right = 239.0
+offset_bottom = 182.0
+
+[node name="VSlider2" type="VSlider" parent="."]
+offset_left = 128.0
+offset_top = 55.0
+offset_right = 147.0
+offset_bottom = 191.0
+
+[node name="HSlider2" type="HSlider" parent="."]
+offset_left = 414.0
+offset_top = 80.0
+offset_right = 660.0
+offset_bottom = 100.0

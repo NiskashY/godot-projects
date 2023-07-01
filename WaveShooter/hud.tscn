@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bs05uivk1eliy"]
+
+[ext_resource type="Texture2D" uid="uid://c1easu5emp7y5" path="res://images/hud/brickwall.png" id="1_rx57n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1kk8r"]
+size = Vector2(516, 471)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_x7p46"]
+polygon = PackedVector2Array(-235.48, -217.759, -235.48, 210.25, 242.839, 217.759, 242.839, -225.267)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_rx57n")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Sprite2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/StaticBody2D"]
+position = Vector2(2, -2.5)
+shape = SubResource("RectangleShape2D_1kk8r")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite2D"]
+scale = Vector2(1.08714, 1.0654)
+occluder = SubResource("OccluderPolygon2D_x7p46")
+sdf_collision = false
