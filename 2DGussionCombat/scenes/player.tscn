@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://cpdcrup0xwq2x"]
+[gd_scene load_steps=63 format=3 uid="uid://cpdcrup0xwq2x"]
 
 [ext_resource type="Texture2D" uid="uid://bfm4218ydulm2" path="res://sprites/characters/player.png" id="1_1msks"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5m8nl"]
@@ -317,7 +317,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ns20j")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 3.0
 }, {
@@ -473,13 +473,17 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_spmcg"]
 size = Vector2(9, 7)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ltm8g"]
+radius = 8.0
+height = 22.0
+
 [node name="player" type="CharacterBody2D"]
 collision_layer = 3
 script = ExtResource("1_5m8nl")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ac65x")
-animation = &"back_skill_first"
+animation = &"death"
 offset = Vector2(0, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -498,5 +502,11 @@ one_shot = true
 wait_time = 5.0
 one_shot = true
 
-[connection signal="timeout" from="FirstSkill/Cd" to="." method="_on_cd_timeout"]
-[connection signal="timeout" from="SecondSkill/Cd" to="." method="_on_cd_timeout"]
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(0, -5)
+shape = SubResource("CapsuleShape2D_ltm8g")
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_exited" from="hitbox" to="." method="_on_hitbox_body_exited"]

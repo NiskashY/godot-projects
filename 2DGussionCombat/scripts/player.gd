@@ -1,18 +1,42 @@
 extends CharacterBody2D
 
-const speed = 100
+signal hit(damage: int)
+
+const speed: int = 100
 var current_direction
-var is_skill_animation_playing = false
+var is_skill_animation_playing: bool = false
+var is_enemy_in_attack_range: bool = false
+var is_player_dead: bool = false
+
+# If player health equals zero - player is dead
+var health: int = 100
+const first_skill_dmg: int = 10
+const second_skill_dmg: int = 50
+
+# Function to distinguish players objects
+# Use <Object>.has_method("player_identifier") to 
+# determine if this object is player
+func player_identifier():
+	pass
 
 func _ready():
 	$AnimatedSprite2D.play("side_idle")
 	current_direction = "side"
 
 func _physics_process(delta):
-	var direction = player_movement(delta)
-	play_animation(direction)
-	play_animation_skills(current_direction)
-	
+	if is_player_dead:
+		return
+		
+	if health == 0:
+		is_player_dead = true
+		$AnimatedSprite2D.play("death")
+		$AnimatedSprite2D.connect("animation_finished", _on_game_over)
+	else:
+		var direction = player_movement(delta)
+		play_animation(direction)
+		play_animation_skills(current_direction)
+
+# ---------------------------------MOVEMENT AND ANIMATION----------------------------
 
 func get_prefix_direction(direction):
 	if direction.x == 0:
@@ -20,19 +44,27 @@ func get_prefix_direction(direction):
 	return "side"
 
 func play_animation_skills(direction_type: String):
+	if is_skill_animation_playing:
+		return
+	
 	var is_lmb: bool = Input.is_action_pressed("ui_lmb") && $FirstSkill/Cd.is_stopped() 
 	var is_rmb: bool = Input.is_action_pressed("ui_rmb") && $SecondSkill/Cd.is_stopped()
 	
 	if is_lmb || is_rmb:
+		var damage = first_skill_dmg
 		if is_lmb:
 			$AnimatedSprite2D.play(direction_type + "_skill_first")
 			$FirstSkill/Cd.start()
 		else:
 			$AnimatedSprite2D.play(direction_type + "_skill_second")
 			$SecondSkill/Cd.start()
+			damage = second_skill_dmg
+		
+		if is_enemy_in_attack_range:
+			emit_signal("hit", damage)
+		
 		$AnimatedSprite2D.connect("animation_finished", _on_skill_animation_finished)
 		is_skill_animation_playing = true
-		
 
 func play_animation(direction: Vector2):
 	if is_skill_animation_playing:
@@ -57,7 +89,7 @@ func play_animation(direction: Vector2):
 	
 	current_direction = direction_type
 	$AnimatedSprite2D.play(direction_type + "_" + animation_type)
-	
+
 func player_movement(_delta): 
 	var direction = Vector2.ZERO
 		
@@ -73,16 +105,23 @@ func player_movement(_delta):
 	
 	return direction.normalized()
 
-func get_animation_time(animation: AnimatedSprite2D):
-	var count = animation.sprite_frames.get_frame_count(animation.get_animation())
-	var duration = animation.sprite_frames.get_frame_duration(animation.get_animation(), 0)
-	return duration * count
-
-func _on_cd_timeout():
-	pass
+# ---------------------------------SIGNALS--------------------------------------------
 
 func _on_skill_animation_finished():
 	$AnimatedSprite2D.disconnect("animation_finished", _on_skill_animation_finished)
 	$AnimatedSprite2D.play(current_direction + "_idle")
 	is_skill_animation_playing = false
-		
+	
+func _on_hitbox_body_entered(body):
+	if body.has_method("enemy_identifier"):
+		is_enemy_in_attack_range = true
+
+func _on_hitbox_body_exited(body):
+	if body.has_method("enemy_identifier"):
+		is_enemy_in_attack_range = false
+
+func _on_enemy_hit(damage):
+	health = max(health - damage, 0)
+
+func _on_game_over():
+	queue_free()

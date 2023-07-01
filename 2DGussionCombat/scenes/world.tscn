@@ -1,5 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://1c48ev7jdh0l"]
+[gd_scene load_steps=11 format=3 uid="uid://1c48ev7jdh0l"]
 
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_dnoau"]
 [ext_resource type="Texture2D" uid="uid://813do386li27" path="res://sprites/tilesets/plains.png" id="1_f54c0"]
 [ext_resource type="Texture2D" uid="uid://b1da8wab562j5" path="res://sprites/tilesets/grass.png" id="2_paj6n"]
 [ext_resource type="Texture2D" uid="uid://dhl7xq3uydn6j" path="res://sprites/objects/objects.png" id="3_ydmh6"]
@@ -163,6 +164,7 @@ sources/3 = SubResource("TileSetAtlasSource_uypmr")
 
 [node name="world" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_dnoau")
 
 [node name="TileMap" type="TileMap" parent="."]
 y_sort_enabled = true
@@ -189,3 +191,6 @@ layer_2/tile_data = PackedInt32Array(458758, 3, 5, 458768, 3, 5, 196625, 393219,
 
 [node name="enemy" parent="." instance=ExtResource("5_n6aoa")]
 position = Vector2(46, 91)
+
+[connection signal="hit" from="player" to="enemy" method="_on_player_hit"]
+[connection signal="hit" from="enemy" to="player" method="_on_enemy_hit"]
