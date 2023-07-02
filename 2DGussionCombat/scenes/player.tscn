@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://cpdcrup0xwq2x"]
+[gd_scene load_steps=65 format=3 uid="uid://cpdcrup0xwq2x"]
 
 [ext_resource type="Texture2D" uid="uid://bfm4218ydulm2" path="res://sprites/characters/player.png" id="1_1msks"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5m8nl"]
@@ -477,6 +477,12 @@ size = Vector2(9, 7)
 radius = 8.0
 height = 22.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_gfxs8"]
+radius = 92.3472
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8ri63"]
+radius = 60.1332
+
 [node name="player" type="CharacterBody2D"]
 collision_layer = 3
 script = ExtResource("1_5m8nl")
@@ -487,26 +493,70 @@ animation = &"death"
 offset = Vector2(0, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 y_sort_enabled = true
 shape = SubResource("RectangleShape2D_spmcg")
 
-[node name="FirstSkill" type="Node" parent="."]
-
-[node name="Cd" type="Timer" parent="FirstSkill"]
-wait_time = 3.0
-one_shot = true
-
-[node name="SecondSkill" type="Node" parent="."]
-
-[node name="Cd" type="Timer" parent="SecondSkill"]
-wait_time = 5.0
-one_shot = true
-
 [node name="hitbox" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
 position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_ltm8g")
 
+[node name="FirstSkill" type="Node2D" parent="."]
+visible = false
+
+[node name="Cd" type="Timer" parent="FirstSkill"]
+wait_time = 3.0
+one_shot = true
+
+[node name="Range" type="Area2D" parent="FirstSkill"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FirstSkill/Range"]
+shape = SubResource("CircleShape2D_gfxs8")
+
+[node name="SecondSkill" type="Node2D" parent="."]
+visible = false
+
+[node name="Cd" type="Timer" parent="SecondSkill"]
+wait_time = 5.0
+one_shot = true
+
+[node name="Range" type="Area2D" parent="SecondSkill"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SecondSkill/Range"]
+shape = SubResource("CircleShape2D_8ri63")
+
+[node name="ThirdSkill" type="Node2D" parent="."]
+
+[node name="Cd" type="Timer" parent="ThirdSkill"]
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+position = Vector2(-24, 10)
+zoom = Vector2(4, 4)
+limit_left = 4
+limit_top = 3
+limit_right = 398
+limit_bottom = 207
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+modulate = Color(0, 0.784314, 0.00392157, 1)
+offset_left = -4.0
+offset_top = -18.0
+offset_right = 116.0
+offset_bottom = 9.0
+scale = Vector2(0.1, 0.1)
+show_percentage = false
+
+[node name="RegenerateTimer" type="Timer" parent="."]
+wait_time = 1.358
+autostart = true
+
 [connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_exited" from="hitbox" to="." method="_on_hitbox_body_exited"]
+[connection signal="timeout" from="RegenerateTimer" to="." method="_on_regenerate_timer_timeout"]

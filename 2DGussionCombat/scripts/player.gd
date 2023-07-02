@@ -9,9 +9,9 @@ var is_enemy_in_attack_range: bool = false
 var is_player_dead: bool = false
 
 # If player health equals zero - player is dead
-var health: int = 100
-const first_skill_dmg: int = 10
-const second_skill_dmg: int = 50
+var health = preload("res://scripts/health_script.gd").new()
+const first_skill_dmg: int = 30
+const second_skill_dmg: int = 70
 
 # Function to distinguish players objects
 # Use <Object>.has_method("player_identifier") to 
@@ -21,24 +21,36 @@ func player_identifier():
 
 func _ready():
 	$AnimatedSprite2D.play("side_idle")
+	$HealthBar.value = health.getter()
+	health.connect("update_health", _on_health_bar_update_health)
 	current_direction = "side"
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if is_player_dead:
 		return
 		
-	if health == 0:
+	if health.getter() == 0:
 		is_player_dead = true
 		$AnimatedSprite2D.play("death")
 		$AnimatedSprite2D.connect("animation_finished", _on_game_over)
 	else:
-		var direction = player_movement(delta)
+		var direction = get_direction()
 		play_animation(direction)
 		play_animation_skills(current_direction)
+		player_movement(direction)
+		move_and_slide()
+	
 
 # ---------------------------------MOVEMENT AND ANIMATION----------------------------
+func get_direction():
+	var direction: Vector2 = Vector2.ZERO
+	
+	direction.x = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
+	direction.y = int(Input.is_action_pressed("ui_down"))  - int(Input.is_action_pressed("ui_up"))
+	
+	return direction.normalized()
 
-func get_prefix_direction(direction):
+func get_prefix_direction(direction: Vector2):
 	if direction.x == 0:
 		return "front" if direction.y > 0 else "back"
 	return "side"
@@ -90,20 +102,21 @@ func play_animation(direction: Vector2):
 	current_direction = direction_type
 	$AnimatedSprite2D.play(direction_type + "_" + animation_type)
 
-func player_movement(_delta): 
-	var direction = Vector2.ZERO
-		
-	direction.x = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
-	direction.y = int(Input.is_action_pressed("ui_down"))  - int(Input.is_action_pressed("ui_up"))
-	
+func player_movement(direction: Vector2): 
 	var current_speed = speed
 	if Input.is_action_pressed("ui_shift"):
 		current_speed <<= 1
 	
-	velocity = direction.normalized() * current_speed
-	move_and_slide()
-	
-	return direction.normalized()
+	# TODO
+	var is_ult: bool = Input.is_action_pressed("ui_R") && $ThirdSkill/Cd.is_stopped()
+	if is_ult:
+		# get_viewport().get_mouse_position() - gives position relative to window
+		$FirstSkill/Cd.stop()
+		$SecondSkill/Cd.stop()	
+		position = get_global_mouse_position()
+		velocity = Vector2.ZERO
+	else:
+		velocity = direction * current_speed
 
 # ---------------------------------SIGNALS--------------------------------------------
 
@@ -121,7 +134,13 @@ func _on_hitbox_body_exited(body):
 		is_enemy_in_attack_range = false
 
 func _on_enemy_hit(damage):
-	health = max(health - damage, 0)
+	health.setter(health.getter() - damage)
 
 func _on_game_over():
 	queue_free()
+
+func _on_regenerate_timer_timeout():
+	health.setter(health.getter() + 5)
+
+func _on_health_bar_update_health(local_health):
+	$HealthBar.value = local_health
