@@ -63,7 +63,7 @@ func play_animation_skills(direction_type: String):
 	var is_rmb: bool = Input.is_action_pressed("ui_rmb") && $SecondSkill/Cd.is_stopped()
 	
 	if is_lmb || is_rmb:
-		var damage = first_skill_dmg
+		var damage: int = first_skill_dmg
 		if is_lmb:
 			$AnimatedSprite2D.play(direction_type + "_skill_first")
 			$FirstSkill/Cd.start()
@@ -73,6 +73,7 @@ func play_animation_skills(direction_type: String):
 			damage = second_skill_dmg
 		
 		if is_enemy_in_attack_range:
+			print("player hit")
 			emit_signal("hit", damage)
 		
 		$AnimatedSprite2D.connect("animation_finished", _on_skill_animation_finished)
@@ -103,17 +104,27 @@ func play_animation(direction: Vector2):
 	$AnimatedSprite2D.play(direction_type + "_" + animation_type)
 
 func player_movement(direction: Vector2): 
-	var current_speed = speed
+	var current_speed: int = speed
 	if Input.is_action_pressed("ui_shift"):
 		current_speed <<= 1
 	
-	# TODO
 	var is_ult: bool = Input.is_action_pressed("ui_R") && $ThirdSkill/Cd.is_stopped()
 	if is_ult:
-		# get_viewport().get_mouse_position() - gives position relative to window
+		
+		# Get position of the mouse
+		var new_position: Vector2 = get_global_mouse_position()
+	
+		# Limit new position by radious of third skill
+		var radius: int = $ThirdSkill/Range/CollisionShape2D.shape.radius
+		var directional_vector: Vector2 = (new_position - position).limit_length(radius)
+		
+		# Restore new position
+		position = directional_vector + position
+		
 		$FirstSkill/Cd.stop()
 		$SecondSkill/Cd.stop()	
-		position = get_global_mouse_position()
+		$ThirdSkill/Cd.start()
+		
 		velocity = Vector2.ZERO
 	else:
 		velocity = direction * current_speed

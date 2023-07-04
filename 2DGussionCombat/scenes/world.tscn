@@ -188,7 +188,7 @@ layer_2/z_index = 1
 layer_2/tile_data = PackedInt32Array(458758, 3, 5, 458768, 3, 5, 196625, 393219, 7, 196627, 393219, 7, 196629, 393219, 7, 131078, 393219, 7, 19, 655363, 7, 23, 655363, 7, 655361, 524291, 6, 655383, 524291, 6, 327692, 3, 0)
 
 [node name="player" parent="." instance=ExtResource("4_wmtu6")]
-position = Vector2(197, 72)
+position = Vector2(198, 90)
 
 [node name="enemy" parent="." instance=ExtResource("5_n6aoa")]
 position = Vector2(46, 91)

@@ -53,7 +53,6 @@ func _on_detection_area_body_exited(body):
 		player_chase = false
 
 func _on_ad_cooldown_timeout():
-	print("hit emited")
 	emit_signal("hit", ad_damage)
 
 func _on_hitbox_body_entered(body):
@@ -65,6 +64,7 @@ func _on_hitbox_body_exited(body):
 		$AdCooldown.stop()
 
 func _on_player_hit(damage):
+	print("hit taken by enemy")
 	health.setter(health.getter() - damage)
 
 func _on_death():

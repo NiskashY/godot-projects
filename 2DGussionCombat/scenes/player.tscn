@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://cpdcrup0xwq2x"]
+[gd_scene load_steps=66 format=3 uid="uid://cpdcrup0xwq2x"]
 
 [ext_resource type="Texture2D" uid="uid://bfm4218ydulm2" path="res://sprites/characters/player.png" id="1_1msks"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5m8nl"]
@@ -483,6 +483,9 @@ radius = 92.3472
 [sub_resource type="CircleShape2D" id="CircleShape2D_8ri63"]
 radius = 60.1332
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_r1s5a"]
+radius = 79.404
+
 [node name="player" type="CharacterBody2D"]
 collision_layer = 3
 script = ExtResource("1_5m8nl")
@@ -493,19 +496,16 @@ animation = &"death"
 offset = Vector2(0, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 y_sort_enabled = true
 shape = SubResource("RectangleShape2D_spmcg")
 
 [node name="hitbox" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
 position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_ltm8g")
 
 [node name="FirstSkill" type="Node2D" parent="."]
-visible = false
 
 [node name="Cd" type="Timer" parent="FirstSkill"]
 wait_time = 3.0
@@ -517,7 +517,6 @@ one_shot = true
 shape = SubResource("CircleShape2D_gfxs8")
 
 [node name="SecondSkill" type="Node2D" parent="."]
-visible = false
 
 [node name="Cd" type="Timer" parent="SecondSkill"]
 wait_time = 5.0
@@ -531,7 +530,13 @@ shape = SubResource("CircleShape2D_8ri63")
 [node name="ThirdSkill" type="Node2D" parent="."]
 
 [node name="Cd" type="Timer" parent="ThirdSkill"]
+wait_time = 10.0
 one_shot = true
+
+[node name="Range" type="Area2D" parent="ThirdSkill"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ThirdSkill/Range"]
+shape = SubResource("CircleShape2D_r1s5a")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
