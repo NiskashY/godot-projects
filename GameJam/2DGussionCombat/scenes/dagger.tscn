@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvnqcqy6rlwvn"]
+
+[ext_resource type="Texture2D" uid="uid://crxpnnx6ebnqf" path="res://sprites/objects/sword.png" id="1_161pc"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2mtcg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cy2hk"]
+size = Vector2(167, 27)
+
+[node name="Dagger" type="RigidBody2D"]
+physics_material_override = SubResource("PhysicsMaterial_2mtcg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(5, -1.19209e-07)
+rotation = 2.33257
+scale = Vector2(0.253463, 0.264037)
+texture = ExtResource("1_161pc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(6.5, 0.5)
+shape = SubResource("RectangleShape2D_cy2hk")

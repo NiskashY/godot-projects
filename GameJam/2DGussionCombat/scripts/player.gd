@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 signal hit(damage: int)
 
+# Scenes
+var dagger_scene: PackedScene = preload("res://scenes/dagger.tscn")
+
+# Variables
 const speed: int = 100
 var current_direction
 var is_skill_animation_playing: bool = false
@@ -67,6 +71,10 @@ func play_animation_skills(direction_type: String):
 		if is_lmb:
 			$AnimatedSprite2D.play(direction_type + "_skill_first")
 			$FirstSkill/Cd.start()
+			var dagger = dagger_scene.instantiate()
+			dagger.position = $Marker2D.position
+			dagger.apply_impulse(Vector2(100, 0))
+			get_tree().get_root().call_deferred("add_child", dagger)
 		else:
 			$AnimatedSprite2D.play(direction_type + "_skill_second")
 			$SecondSkill/Cd.start()

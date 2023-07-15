@@ -496,16 +496,19 @@ animation = &"death"
 offset = Vector2(0, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 y_sort_enabled = true
 shape = SubResource("RectangleShape2D_spmcg")
 
 [node name="hitbox" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
 position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_ltm8g")
 
 [node name="FirstSkill" type="Node2D" parent="."]
+visible = false
 
 [node name="Cd" type="Timer" parent="FirstSkill"]
 wait_time = 3.0
@@ -517,6 +520,7 @@ one_shot = true
 shape = SubResource("CircleShape2D_gfxs8")
 
 [node name="SecondSkill" type="Node2D" parent="."]
+visible = false
 
 [node name="Cd" type="Timer" parent="SecondSkill"]
 wait_time = 5.0
@@ -528,6 +532,7 @@ one_shot = true
 shape = SubResource("CircleShape2D_8ri63")
 
 [node name="ThirdSkill" type="Node2D" parent="."]
+visible = false
 
 [node name="Cd" type="Timer" parent="ThirdSkill"]
 wait_time = 10.0
@@ -561,6 +566,9 @@ show_percentage = false
 [node name="RegenerateTimer" type="Timer" parent="."]
 wait_time = 1.358
 autostart = true
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(17, -3)
 
 [connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="body_exited" from="hitbox" to="." method="_on_hitbox_body_exited"]
